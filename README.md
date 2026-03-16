@@ -1,202 +1,156 @@
-# 🔐 Simulação de Ataques de Força Bruta com Kali Linux e Medusa
+# 🔑 Ataque de Brute Force de Senhas com Medusa e Kali Linux
 
-## 📌 Sobre o Projeto
+> ⚠️ **Aviso Legal:** Este projeto foi desenvolvido **exclusivamente para fins educacionais**, em ambiente controlado e isolado. Nenhum código, comando ou técnica aqui descrita deve ser utilizada contra sistemas reais sem autorização explícita. O objetivo é compreender como ataques de força bruta funcionam para **fortalecer a segurança de sistemas e autenticações**.
 
-Este projeto foi desenvolvido como parte de um desafio prático com foco em Segurança da Informação, utilizando Kali Linux e Medusa em conjunto com ambientes vulneráveis para simular ataques de força bruta.
-
-O objetivo principal foi compreender técnicas ofensivas em um ambiente controlado, identificar vulnerabilidades comuns e propor medidas de mitigação.
-
-⚠️ Todos os testes foram realizados em laboratório isolado para fins exclusivamente educacionais.
+Projeto de **Cibersegurança** focado na simulação de ataques de força bruta contra serviços de autenticação (**SSH, FTP e HTTP**), utilizando **Kali Linux** e a ferramenta **Medusa**. O projeto também documenta as principais **contramedidas e boas práticas** de defesa contra esse tipo de ataque.
 
 ---
 
-## 🎯 Objetivos de Aprendizagem
+## 🎯 Objetivo
 
-- Compreender ataques de força bruta em serviços FTP, Web e SMB
-- Utilizar Kali Linux para auditoria de segurança
-- Aplicar a ferramenta Medusa em cenários reais simulados
-- Documentar processos técnicos de forma estruturada
-- Reconhecer vulnerabilidades e propor medidas de mitigação
-- Utilizar o GitHub como portfólio técnico
+Demonstrar na prática como ataques de força bruta exploram senhas fracas em serviços de autenticação amplamente utilizados, e como administradores de sistemas podem detectar, bloquear e prevenir esse tipo de ataque.
 
 ---
 
-## 🖥️ Ambiente de Laboratório
+## 🗂️ Estrutura do Projeto
 
-### 🔧 Infraestrutura
-
-- VirtualBox
-- 2 Máquinas Virtuais
-- Rede configurada como Host-Only
-
-### 🐉 Máquina Atacante
-- Kali Linux
-
-### 💀 Máquina Alvo
-- Metasploitable 2
-- DVWA (Damn Vulnerable Web Application)
-
----
-
-## 🔧 Ferramentas Utilizadas
-
-- Medusa
-- Nmap
-- Wordlists personalizadas
-- Terminal Linux
-
----
-
-# 🚨 Cenários Testados
-
----
-
-## 1️⃣ Ataque de Força Bruta em FTP
-
-### 🔎 Enumeração de Serviço
-
-```bash
-nmap -p 21 <IP_ALVO>
+```
+Ataque-de-Brute-Force-de-Senhas-com-Medusa-e-Kali-Linux/
+├── commands/
+│   ├── ssh_bruteforce.sh         # Comandos para ataque via SSH
+│   ├── ftp_bruteforce.sh         # Comandos para ataque via FTP
+│   └── http_bruteforce.sh        # Comandos para ataque via HTTP (painel web)
+├── wordlist/
+│   └── passwords.txt             # Wordlist de senhas utilizada nos testes
+├── docs/
+│   └── relatorio.pdf             # Relatório técnico com evidências e análise
+└── README.md
 ```
 
-# 🚨 Execução dos Ataques e Resultados
-
 ---
 
-## 1️⃣ Ataque de Força Bruta em FTP
+## ⚔️ Protocolos Testados
 
-### 💣 Execução do Ataque
+### 🔴 SSH — Secure Shell
+
+Simulação de ataque de força bruta contra o serviço de acesso remoto SSH, um dos alvos mais comuns em servidores expostos na internet.
 
 ```bash
-medusa -h <IP_ALVO> -u msfadmin -P wordlist.txt -M ftp
+medusa -h <TARGET_IP> -u <USER> -P wordlist/passwords.txt -M ssh
 ```
-
-## ✅ Resultado Obtido (FTP)
-
-- Identificação de credenciais fracas  
-- Acesso ao serviço FTP validado com sucesso  
-
-### 🛡️ Recomendações de Mitigação
-
-- Implementação de política forte de senhas  
-- Bloqueio após múltiplas tentativas falhas  
-- Monitoramento contínuo de logs  
-- Desativação de autenticação simples quando possível  
 
 ---
 
-## 2️⃣ Ataque de Força Bruta em Formulário Web (DVWA)
+### 🔴 FTP — File Transfer Protocol
 
-### 🔎 Análise do Formulário
-
-- Identificação do método HTTP (POST)  
-- Captura dos parâmetros de autenticação  
-
-### 💣 Execução do Ataque
+Simulação de ataque contra serviços FTP, frequentemente expostos com credenciais padrão ou fracas.
 
 ```bash
-medusa -h <IP_ALVO> -U users.txt -P passwords.txt -M http
+medusa -h <TARGET_IP> -u <USER> -P wordlist/passwords.txt -M ftp
 ```
-
-## ✅ Resultado Obtido (DVWA)
-
-- Comprometimento do login através de credenciais fracas  
-- Acesso validado ao painel da aplicação  
-
-### 🛡️ Recomendações de Mitigação
-
-- Implementação de CAPTCHA  
-- Rate limiting (limitação de tentativas)  
-- Autenticação Multifator (MFA)  
-- Bloqueio por IP após múltiplas falhas  
-- Monitoramento de tentativas suspeitas  
 
 ---
 
-## 3️⃣ Password Spraying em SMB
+### 🔴 HTTP — Painel Web
 
-### 🔎 Enumeração de Usuários
+Simulação de ataque de força bruta contra formulários de login em painéis web, explorando autenticações sem proteção contra múltiplas tentativas.
 
 ```bash
-nmap --script smb-enum-users -p 445 <IP_ALVO>
+medusa -h <TARGET_IP> -u <USER> -P wordlist/passwords.txt -M http -m DIR:/<LOGIN_PATH>
 ```
 
-# ✅ Resultado Obtido
+---
 
-- Identificação de usuários com senha padrão  
-- Acesso autenticado com sucesso  
+## 🛡️ Defesa e Mitigação
+
+Para cada serviço testado, o projeto documenta as principais contramedidas:
+
+| Vetor de Ataque | Contramedidas Recomendadas |
+|---|---|
+| SSH | Desabilitar login por senha, usar chaves SSH, alterar porta padrão, configurar `fail2ban` |
+| FTP | Desabilitar FTP anônimo, usar SFTP, limitar tentativas de login |
+| HTTP | Implementar bloqueio por tentativas, CAPTCHA, autenticação multifator (MFA) |
+| Geral | Senhas longas e complexas, monitoramento de logs, alertas de acesso, rate limiting |
+
+### Ferramentas de defesa citadas
+
+- **Fail2ban** — bloqueia IPs após N tentativas falhas
+- **UFW / iptables** — firewall para restringir acesso por IP e porta
+- **Autenticação multifator (MFA)** — segunda camada de verificação
+- **Monitoramento de logs** — `/var/log/auth.log` para SSH e FTP
 
 ---
 
-# 🛡️ Recomendações de Mitigação
+## 🛠️ Tecnologias e Ferramentas
 
-- Política de complexidade de senha  
-- Bloqueio automático por tentativas falhas  
-- Monitoramento de eventos de autenticação  
-- Desativação do protocolo SMBv1  
-- Auditoria periódica de credenciais  
-
----
-
-# 📂 Estrutura do Repositório
-/images
-/wordlists
-README.md
-comandos-utilizados.txt
-
+| Ferramenta | Uso |
+|---|---|
+| Kali Linux | Sistema operacional para testes de segurança |
+| Medusa | Ferramenta de força bruta para múltiplos protocolos |
+| SSH / FTP / HTTP | Protocolos alvo dos testes |
+| Wordlist | Lista de senhas para os ataques simulados |
+| Git / GitHub | Versionamento e documentação |
 
 ---
 
-# 📁 Descrição das Pastas e Arquivos
+## 🚀 Como Reproduzir (Ambiente Controlado)
 
-- `/images` → Capturas de tela organizadas dos testes  
-- `/wordlists` → Listas de senhas utilizadas nos testes  
-- `README.md` → Documentação completa do projeto  
-- `comandos-utilizados.txt` → Registro dos comandos executados  
+### Pré-requisitos
 
----
+- Kali Linux instalado (físico ou em VM)
+- Medusa instalado:
+```bash
+sudo apt update && sudo apt install medusa -y
+```
+- Ambiente de laboratório isolado (ex: máquina virtual alvo com serviços habilitados)
 
-# 📚 Principais Aprendizados
+### Executando os testes
 
-Durante o desenvolvimento deste projeto foi possível:
+```bash
+# Clone o repositório
+git clone https://github.com/GuiMRDS/Ataque-de-Brute-Force-de-Senhas-com-Medusa-e-Kali-Linux.git
 
-- Entender na prática como ataques de força bruta funcionam  
-- Perceber o impacto de senhas fracas em ambientes corporativos  
-- Aprender técnicas básicas de enumeração de serviços  
-- Desenvolver documentação técnica clara e organizada  
-- Estruturar um laboratório seguro para simulação de ataques  
+# Acesse a pasta
+cd Ataque-de-Brute-Force-de-Senhas-com-Medusa-e-Kali-Linux
 
----
+# Execute o script desejado (exemplo SSH)
+bash commands/ssh_bruteforce.sh
+```
 
-# 🔐 Vulnerabilidades Identificadas
-
-- Uso de senhas fracas ou padrão  
-- Ausência de bloqueio após múltiplas tentativas  
-- Falta de autenticação multifator  
-- Serviços expostos sem monitoramento adequado  
-- Configurações padrão não alteradas  
+> 🔒 **Obrigatório:** Use exclusivamente em redes e máquinas próprias ou em ambientes de laboratório criados para este fim. Nunca execute contra sistemas de terceiros.
 
 ---
 
-# 🚀 Conclusão
+## 📚 O que foi Aprendido
 
-O projeto demonstrou que vulnerabilidades simples podem comprometer serviços críticos em poucos minutos quando não há medidas de proteção adequadas.
-
-Mais importante do que executar os ataques foi compreender como preveni-los, reforçando boas práticas de segurança e políticas de proteção.
-
-Este laboratório contribuiu significativamente para o fortalecimento de conhecimentos em:
-
-- Pentest básico  
-- Segurança ofensiva  
-- Enumeração de serviços  
-- Análise de vulnerabilidades  
-- Documentação técnica  
-- Estruturação de ambiente de testes  
+- Como ataques de força bruta exploram autenticações sem proteção
+- Diferenças de comportamento entre os protocolos SSH, FTP e HTTP sob ataque
+- Uso prático da ferramenta **Medusa** para testes de penetração
+- Como wordlists influenciam a eficiência do ataque
+- Configuração de ferramentas de defesa como **Fail2ban** e firewall
+- Boas práticas de hardening de serviços de autenticação
 
 ---
 
-# ⚠️ Aviso Legal
+## 🎓 Contexto Acadêmico
 
-Este projeto foi realizado exclusivamente em ambiente controlado e com fins educacionais.
+> Projeto desenvolvido durante o **Bootcamp Riachuelo – Cibersegurança**, promovido pela **Digital Innovation One (DIO)** em parceria com **Lojas Riachuelo S.A.**
+>
+> **Carga horária:** 40 horas
+> **Tópicos do bootcamp:** Segurança da Informação · Linux básico e intermediário · Kali Linux · Análise de vulnerabilidades · Hacking ético · Automação com Python
 
-A realização de testes de invasão sem autorização formal é ilegal e pode resultar em sanções civis e criminais.
+---
+
+## 👨‍💻 Autor
+
+**Guilherme Marinho**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-guilherme--marinho04-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/guilherme-marinho04/)
+[![GitHub](https://img.shields.io/badge/GitHub-GuiMRDS-black?style=flat&logo=github)](https://github.com/GuiMRDS)
+[![Email](https://img.shields.io/badge/Email-guilherme.marinho04%40gmail.com-red?style=flat&logo=gmail)](mailto:guilherme.marinho04@gmail.com)
+
+---
+
+## 📄 Licença
+
+Este projeto foi desenvolvido para fins educacionais. O uso das técnicas aqui descritas contra sistemas sem autorização é crime previsto na **Lei nº 12.737/2012 (Lei Carolina Dieckmann)** e no **Marco Civil da Internet**. Use com responsabilidade.
