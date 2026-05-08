@@ -132,15 +132,6 @@ bash commands/ssh_bruteforce.sh
 
 ---
 
-## 🎓 Contexto Acadêmico
-
-> Projeto desenvolvido durante o **Bootcamp Riachuelo – Cibersegurança**, promovido pela **Digital Innovation One (DIO)** em parceria com **Lojas Riachuelo S.A.**
->
-> **Carga horária:** 40 horas
-> **Tópicos do bootcamp:** Segurança da Informação · Linux básico e intermediário · Kali Linux · Análise de vulnerabilidades · Hacking ético · Automação com Python
-
----
-
 ## 👨‍💻 Autor
 
 **Guilherme Marinho**
